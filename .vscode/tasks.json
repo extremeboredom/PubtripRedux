@@ -1,0 +1,12 @@
+{
+	"version": "0.1.0",
+	"command": "webpack",
+	"isShellCommand": true,
+	"tasks": [
+		{
+			"taskName": "webpack",
+			"suppressTaskName": true,
+			"isBuildCommand": true
+		}
+	]
+}
