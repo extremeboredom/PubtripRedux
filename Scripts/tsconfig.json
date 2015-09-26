@@ -1,9 +1,0 @@
-{
-	"compilerOptions": {
-		"noEmitOnError": true,
-		"target": "ES6",
-		"sourceMap": true,
-		"jsx": "react",
-		"diagnostics": true
-	}
-}
