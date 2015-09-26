@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './Scripts/index.tsx',
+  entry: './Scripts/index.jsx',
   output: {
     filename: './wwwroot/js/bundle.js'
   },
@@ -10,7 +10,8 @@ module.exports = {
   resolveLoader: { root: __dirname + "/node_modules"},
   module: {
     loaders: [
-      { test: /\.ts(x)?$/, loader: 'babel-loader!ts-loader' }
+      { test: /\.ts(x)?$/, loader: 'babel-loader!ts-loader' },
+      { test: /\.jsx?$/, loader: 'babel-loader' }
     ]
   }
 }
