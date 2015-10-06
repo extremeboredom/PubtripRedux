@@ -1,14 +1,17 @@
-
-import * as React from 'react';
+import 'babel-core/polyfill';
+import React from 'react';
+import { render } from 'react-dom'
 import { Provider } from 'react-redux';
-import App from './containers/App';
 import configureStore from './store/configureStore';
+import { ReduxRouter } from 'redux-router';
 
-const store = configureStore();
+const store = configureStore(window.initialData);
 
-React.render(
+
+
+render(
   <Provider store={store}>
-    {() => <App />}
+      <ReduxRouter />
   </Provider>,
   document.getElementById('root')
 );

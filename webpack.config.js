@@ -5,12 +5,11 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.ts', '.js', '.tsx']
+    extensions: ['', '.webpack.js', '.web.js', '.ts', '.js', '.jsx']
   },
   resolveLoader: { root: __dirname + "/node_modules"},
   module: {
     loaders: [
-      { test: /\.ts(x)?$/, loader: 'babel-loader!ts-loader' },
       { test: /\.jsx?$/, loader: 'babel-loader' }
     ]
   }
