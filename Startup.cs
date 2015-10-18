@@ -122,9 +122,16 @@ namespace pubtrip_redux
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
             {
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+                    
+                routes.MapRoute(
+                    name: "catchall",
+                    template: "{*url}",
+                    defaults: new { controller = "Home", action = "Index" }
+                );
 
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");

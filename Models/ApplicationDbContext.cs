@@ -9,6 +9,9 @@ namespace pubtrip_redux.Models
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<Pub> Pubs { get; set; }
+        public DbSet<Trip> Trips { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
