@@ -12,9 +12,9 @@ namespace pubtrip_redux.Migrations
                 name: "Pub",
                 columns: table => new
                 {
-                    Id = table.Column<int>(isNullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(isNullable: true)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -24,10 +24,10 @@ namespace pubtrip_redux.Migrations
                 name: "Trip",
                 columns: table => new
                 {
-                    Id = table.Column<int>(isNullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(isNullable: true),
-                    PubId = table.Column<int>(isNullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    PubId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

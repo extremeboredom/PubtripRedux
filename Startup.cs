@@ -26,9 +26,10 @@ namespace pubtrip_redux
         {
             // Setup configuration sources.
 
-            var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(appEnv.ApplicationBasePath)
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())
             {
@@ -60,17 +61,17 @@ namespace pubtrip_redux
             // Configure the options for the authentication middleware.
             // You can add options for Google, Twitter and other middleware as shown below.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
-            services.Configure<FacebookAuthenticationOptions>(options =>
-            {
-                options.AppId = Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            });
+            //  services.Configure<FacebookAuthenticationOptions>(options =>
+            //  {
+            //      options.AppId = Configuration["Authentication:Facebook:AppId"];
+            //      options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //  });
 
-            services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
-            {
-                options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
-                options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
-            });
+            //  services.Configure<MicrosoftAccountAuthenticationOptions>(options =>
+            //  {
+            //      options.ClientId = Configuration["Authentication:MicrosoftAccount:ClientId"];
+            //      options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
+            //  });
 
             // Add MVC services to the services container.
             services.AddMvc();
@@ -92,18 +93,21 @@ namespace pubtrip_redux
             loggerFactory.AddDebug();
 
             // Configure the HTTP request pipeline.
+            
+            // Add the platform handler to the request pipeline.
+            app.UseIISPlatformHandler();
 
             // Add the following to the request pipeline only in development environment.
             if (env.IsDevelopment())
             {
-                app.UseErrorPage();
+                app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }
             else
             {
                 // Add Error handling middleware which catches all application specific errors and
                 // sends the request to the following path or controller action.
-                app.UseErrorHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             // Add static files to the request pipeline.
@@ -114,7 +118,11 @@ namespace pubtrip_redux
 
             // Add authentication middleware to the request pipeline. You can configure options such as Id and Secret in the ConfigureServices method.
             // For more information see http://go.microsoft.com/fwlink/?LinkID=532715
-            // app.UseFacebookAuthentication();
+            //  app.UseFacebookAuthentication(options =>
+            //  {
+            //      options.AppId = Configuration["Authentication:Facebook:AppId"];
+            //      options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //  });
             // app.UseGoogleAuthentication();
             // app.UseMicrosoftAccountAuthentication();
             // app.UseTwitterAuthentication();

@@ -8,13 +8,9 @@ using pubtrip_redux.Models;
 namespace pubtrip_redux.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20151017151832_AddPubsAndSimpleTrip")]
     partial class AddPubsAndSimpleTrip
     {
-        public override string Id
-        {
-            get { return "20151017151832_AddPubsAndSimpleTrip"; }
-        }
-
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -25,7 +21,7 @@ namespace pubtrip_redux.Migrations
                     b.Property<string>("Id");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .ConcurrencyToken();
+                        .IsConcurrencyToken();
 
                     b.Property<string>("Name")
                         .Annotation("MaxLength", 256);
@@ -33,7 +29,7 @@ namespace pubtrip_redux.Migrations
                     b.Property<string>("NormalizedName")
                         .Annotation("MaxLength", 256);
 
-                    b.Key("Id");
+                    b.HasKey("Id");
 
                     b.Index("NormalizedName")
                         .Annotation("Relational:Name", "RoleNameIndex");
@@ -52,7 +48,7 @@ namespace pubtrip_redux.Migrations
 
                     b.Property<string>("RoleId");
 
-                    b.Key("Id");
+                    b.HasKey("Id");
 
                     b.Annotation("Relational:TableName", "AspNetRoleClaims");
                 });
@@ -68,7 +64,7 @@ namespace pubtrip_redux.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Key("Id");
+                    b.HasKey("Id");
 
                     b.Annotation("Relational:TableName", "AspNetUserClaims");
                 });
@@ -83,7 +79,7 @@ namespace pubtrip_redux.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Key("LoginProvider", "ProviderKey");
+                    b.HasKey("LoginProvider", "ProviderKey");
 
                     b.Annotation("Relational:TableName", "AspNetUserLogins");
                 });
@@ -94,7 +90,7 @@ namespace pubtrip_redux.Migrations
 
                     b.Property<string>("RoleId");
 
-                    b.Key("UserId", "RoleId");
+                    b.HasKey("UserId", "RoleId");
 
                     b.Annotation("Relational:TableName", "AspNetUserRoles");
                 });
@@ -106,7 +102,7 @@ namespace pubtrip_redux.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Key("Id");
+                    b.HasKey("Id");
                 });
 
             modelBuilder.Entity("Trip", b =>
@@ -118,7 +114,7 @@ namespace pubtrip_redux.Migrations
 
                     b.Property<int?>("PubId");
 
-                    b.Key("Id");
+                    b.HasKey("Id");
                 });
 
             modelBuilder.Entity("pubtrip_redux.Models.ApplicationUser", b =>
@@ -128,7 +124,7 @@ namespace pubtrip_redux.Migrations
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .ConcurrencyToken();
+                        .IsConcurrencyToken();
 
                     b.Property<string>("Email")
                         .Annotation("MaxLength", 256);
@@ -158,7 +154,7 @@ namespace pubtrip_redux.Migrations
                     b.Property<string>("UserName")
                         .Annotation("MaxLength", 256);
 
-                    b.Key("Id");
+                    b.HasKey("Id");
 
                     b.Index("NormalizedEmail")
                         .Annotation("Relational:Name", "EmailIndex");
@@ -171,40 +167,40 @@ namespace pubtrip_redux.Migrations
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
                 {
-                    b.Reference("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
-                        .InverseCollection()
+                    b.HasOne("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
+                        .WithMany()
                         .ForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
                 {
-                    b.Reference("pubtrip_redux.Models.ApplicationUser")
-                        .InverseCollection()
+                    b.HasOne("pubtrip_redux.Models.ApplicationUser")
+                        .WithMany()
                         .ForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
                 {
-                    b.Reference("pubtrip_redux.Models.ApplicationUser")
-                        .InverseCollection()
+                    b.HasOne("pubtrip_redux.Models.ApplicationUser")
+                        .WithMany()
                         .ForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole<string>", b =>
                 {
-                    b.Reference("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
-                        .InverseCollection()
+                    b.HasOne("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
+                        .WithMany()
                         .ForeignKey("RoleId");
 
-                    b.Reference("pubtrip_redux.Models.ApplicationUser")
-                        .InverseCollection()
+                    b.HasOne("pubtrip_redux.Models.ApplicationUser")
+                        .WithMany()
                         .ForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Trip", b =>
                 {
-                    b.Reference("Pub")
-                        .InverseCollection()
+                    b.HasOne("Pub")
+                        .WithMany()
                         .ForeignKey("PubId");
                 });
         }

@@ -20,14 +20,14 @@ public class PubsController : Controller
 		
 		if (!m_dbContext.Pubs.Any())
 		{
-			m_dbContext.AddRange(
-				new Pub {
-					Name = "Rancliffe Arms"
-				},
+			var rancliffe = new Pub {Name = "Rancliffe Arms" };
+			m_dbContext.Pubs.AddRange(
+				rancliffe,
 				new Pub {
 					Name = "Generous Briton"
 				}
 			);
+			m_dbContext.Trips.Add(new Trip{ Name = "My First Trip", Pub = rancliffe});
 			m_dbContext.SaveChanges();
 		}
 	}
@@ -36,6 +36,6 @@ public class PubsController : Controller
 	[Route("api/pubs")]
 	public async Task<List<Pub>> GetPubsAsync(CancellationToken cancel)
 	{
-        return await m_dbContext.Pubs.Take(10).ToListAsync(cancel);
+		return await m_dbContext.Pubs.ToListAsync(cancel);
 	}
 }
