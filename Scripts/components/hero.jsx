@@ -15,6 +15,9 @@ class Hero extends Component {
 		  	<Link to="/trip/create" className="btn btn-primary btn-large">
 				Organise a Pubtrip
 			</Link>
+			<Link to="/pubs" className="btn btn-large">
+				Pubs
+			</Link>
           </p>
         </div>
 	);

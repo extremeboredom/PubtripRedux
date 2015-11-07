@@ -1,5 +1,5 @@
 
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -37,5 +37,23 @@ public class PubsController : Controller
 	public async Task<List<Pub>> GetPubsAsync(CancellationToken cancel)
 	{
 		return await m_dbContext.Pubs.ToListAsync(cancel);
+	}
+	
+	[HttpGet]
+	[Route("api/pubs/{pubId}")]
+	public async Task<IActionResult> GetPubAsync(int pubId, CancellationToken cancel)
+	{
+		var pub = await m_dbContext.Pubs.Select(p => new { 
+			Id = p.Id,
+			Name = p.Name
+		})
+		.FirstOrDefaultAsync(cancel);
+		
+		if (pub == null)
+		{
+			return new HttpNotFoundResult();
+		}
+		
+		return new HttpOkObjectResult(pub);
 	}
 }

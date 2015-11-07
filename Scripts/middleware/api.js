@@ -2,13 +2,14 @@
 import { Schema, arrayOf, normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import 'isomorphic-fetch';
+import defaults from 'lodash/object/defaults';
 
 const API_ROOT = '/api';
 
-function callApi(endpoint, schema) {
+function callApi(endpoint, schema, options) {
 	const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
 
-	return fetch(fullUrl)
+	return fetch(fullUrl, options)
 		.then(response =>
 			response.json().then(json => ({ json, response }))
 			).then(({ json, response }) => {
@@ -17,11 +18,11 @@ function callApi(endpoint, schema) {
 				}
 
 				const camelizedJson = camelizeKeys(json);
-				//const nextPageUrl = getNextPageUrl(response) || undefined;
+				const nextPageUrl = /*getNextPageUrl(response) ||*/ undefined;
 
 				return Object.assign({},
-					normalize(camelizedJson, schema)//,
-				//{ nextPageUrl }
+					normalize(camelizedJson, schema),
+					{ nextPageUrl }
 					);
 			});
 }
@@ -52,8 +53,9 @@ export default store => next => action => {
 	if (typeof callAPI === 'undefined') {
 		return next(action);
 	}
-
-	let { endpoint } = callAPI;
+	
+	let defaultOptions = { credentials: 'include' };
+	let { endpoint, options } = callAPI;
 	const { schema, types } = callAPI;
 
 	if (typeof endpoint === 'function') {
@@ -72,6 +74,11 @@ export default store => next => action => {
 	if (!types.every(type => typeof type === 'string')) {
 		throw new Error('Expected action types to be strings.');
 	}
+	if (options && typeof options !== 'object') {
+		throw new Error('Expected options to be an object');
+	}
+	
+	options = defaults(options || {}, defaultOptions);
 
 	function actionWith(data) {
 		const finalAction = Object.assign({}, action, data);
@@ -82,7 +89,7 @@ export default store => next => action => {
 	const [requestType, successType, failureType] = types;
 	next(actionWith({ type: requestType }));
 
-	return callApi(endpoint, schema).then(
+	return callApi(endpoint, schema, options).then(
 		response => next(actionWith({
 			response,
 			type: successType
