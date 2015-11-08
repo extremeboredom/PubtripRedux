@@ -27,6 +27,10 @@ function callApi(endpoint, schema, options) {
 			});
 }
 
+const userSchema = new Schema('users', {
+	idAttribute: 'userName'
+});
+
 const pubSchema = new Schema('pubs', {
 	idAttribute: 'id'
 });
@@ -36,14 +40,16 @@ const tripSchema = new Schema('trips', {
 });
 
 tripSchema.define({
-	pub: pubSchema
+	pub: pubSchema,
+	organiser: userSchema
 });
 
 export const Schemas = {
 	Pub: pubSchema,
 	Pubs: arrayOf(pubSchema),
 	Trip: tripSchema,
-	Trips: arrayOf(tripSchema)
+	Trips: arrayOf(tripSchema),
+	User: userSchema
 };
 
 export const CALL_API = Symbol('Call API');

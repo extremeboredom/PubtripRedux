@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Authorization;
@@ -27,7 +28,6 @@ public class PubsController : Controller
 					Name = "Generous Briton"
 				}
 			);
-			m_dbContext.Trips.Add(new Trip{ Name = "My First Trip", Pub = rancliffe});
 			m_dbContext.SaveChanges();
 		}
 	}
@@ -47,7 +47,7 @@ public class PubsController : Controller
 			Id = p.Id,
 			Name = p.Name
 		})
-		.FirstOrDefaultAsync(cancel);
+		.FirstOrDefaultAsync(p => p.Id == pubId, cancel);
 		
 		if (pub == null)
 		{

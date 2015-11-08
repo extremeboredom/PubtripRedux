@@ -37,7 +37,7 @@ function fetchPub(pubId) {
 	return {
 		[CALL_API]: {
 			types: [PUB_REQUEST, PUB_SUCCESS, PUB_FAILURE],
-			endpoint: '/api/pubs/${pubId}',
+			endpoint: `/api/pubs/${pubId}`,
 			schema: Schemas.Pub
 		}
 	}

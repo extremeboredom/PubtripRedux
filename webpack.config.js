@@ -5,6 +5,7 @@ module.exports = {
   },
   devtool: 'source-map',
   resolve: {
+    alias: { 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2010-2020.js'},
     extensions: ['', '.webpack.js', '.web.js', '.ts', '.js', '.jsx']
   },
   resolveLoader: { root: __dirname + "/node_modules"},

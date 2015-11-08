@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { loadPub, loadTripsForPub } from '../actions';
 import Table from '../components/Table';
+import moment from 'moment-timezone';
 
 function loadData(props) {
 	
@@ -12,6 +13,7 @@ function loadData(props) {
 }
 
 const TripNameColumn = 'TripNameColumn';
+const WhenColumn = 'WhenColumn';
 
 class PubPage extends Component {
 
@@ -29,6 +31,8 @@ class PubPage extends Component {
 		switch(column) {
 			case TripNameColumn:
 				return "Trip Name";
+			case WhenColumn:
+				return 'When?';
 			default:
 				return ''
 		}
@@ -38,6 +42,8 @@ class PubPage extends Component {
 		switch(column) {
 			case TripNameColumn:
 				return item.name;
+			case WhenColumn:
+				return moment(item.date).calendar();
 			default:
 				return ''
 		}
@@ -59,7 +65,7 @@ class PubPage extends Component {
 						items={trips}
 						itemToKey={item => item.id}
 						emptyLabel="No Trips Yet.."
-						columns={[TripNameColumn]}
+						columns={[TripNameColumn, WhenColumn]}
 						renderHeader={this.renderHeader}
 						renderRow={this.renderRow} />
 			</div>

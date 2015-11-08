@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Authorization;
@@ -36,10 +37,14 @@ public class TripsController : Controller
         {
             return new BadRequestResult();
         }
+        
+        var userId = User.GetUserId();
         var trip = new Trip
         {
             Name = tripDto.Name,
-            Pub = pub
+            Pub = pub,
+            Organiser = m_dbContext.Users.First(u => u.Id == userId),
+            Date = DateTimeOffset.Now.AddDays(1)
         };
 
         m_dbContext.Trips.Add(trip);
@@ -50,6 +55,10 @@ public class TripsController : Controller
         {
             Id = trip.Id,
             Name = trip.Name,
+            trip.Date,
+            Organiser = new { 
+                trip.Organiser.UserName
+            },
             Pub = new
             {
                 Id = trip.Pub.Id,
@@ -71,6 +80,10 @@ public class TripsController : Controller
 									 {
 									 	 Id = t.Id,
 										 Name = t.Name,
+                                         t.Date,
+                                         Organiser = new { 
+                                             t.Organiser.UserName
+                                         },
 										 PubId = t.Pub.Id
 									 })
 									 .ToListAsync();

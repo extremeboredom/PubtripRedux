@@ -5,12 +5,13 @@ using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Migrations;
 using pubtrip_redux.Models;
 
-namespace pubtripredux.Migrations
+namespace pubtrip_redux.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20151107164943_TemporarilyRemoveTripsDueToStupidSqlite")]
+    partial class TemporarilyRemoveTripsDueToStupidSqlite
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Annotation("ProductVersion", "7.0.0-beta8-15964");
@@ -104,25 +105,6 @@ namespace pubtripredux.Migrations
                     b.HasKey("Id");
                 });
 
-            modelBuilder.Entity("Trip", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired();
-
-                    b.Property<DateTimeOffset>("Date");
-
-                    b.Property<string>("Name");
-
-                    b.Property<DateTimeOffset?>("OrderCutoff");
-
-                    b.Property<int>("PubId");
-
-                    b.HasKey("Id");
-                });
-
             modelBuilder.Entity("pubtrip_redux.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id");
@@ -201,17 +183,6 @@ namespace pubtripredux.Migrations
                     b.HasOne("pubtrip_redux.Models.ApplicationUser")
                         .WithMany()
                         .ForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Trip", b =>
-                {
-                    b.HasOne("pubtrip_redux.Models.ApplicationUser")
-                        .WithMany()
-                        .ForeignKey("ApplicationUserId");
-
-                    b.HasOne("Pub")
-                        .WithMany()
-                        .ForeignKey("PubId");
                 });
         }
     }
