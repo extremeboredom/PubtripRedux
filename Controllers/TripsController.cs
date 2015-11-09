@@ -14,6 +14,7 @@ public class TripDto
     public int Id { get; set; }
     public string Name { get; set; }
     public int Pub { get; set; }
+    public DateTimeOffset Date { get; set; }
 }
 
 [Authorize]
@@ -44,7 +45,7 @@ public class TripsController : Controller
             Name = tripDto.Name,
             Pub = pub,
             Organiser = m_dbContext.Users.First(u => u.Id == userId),
-            Date = DateTimeOffset.Now.AddDays(1)
+            Date = tripDto.Date
         };
 
         m_dbContext.Trips.Add(trip);

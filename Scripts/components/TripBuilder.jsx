@@ -1,4 +1,7 @@
 import React, { Component, PropTypes } from 'react'
+import moment from 'moment-timezone';
+
+const DateTimeFormat = 'YYYY-MM-DD HH:mm';
 
 class TripBuilder extends Component {
 
@@ -9,10 +12,19 @@ class TripBuilder extends Component {
 	}
 	
 	getTripDetails() {
+		// Convert the date and time fields
+		const dateString = this.refs.tripDate.value.trim();
+		const timeString = this.refs.tripTime.value.trim();
+		const dateTimeString = `${dateString} ${timeString}`;
+		
+		const datetime = moment(dateTimeString, DateTimeFormat);
+		
 		return {
 			name: this.refs.tripName.value,
 			// Make sure to coerce to a number
-			pub: +this.refs.pubSelector.value
+			pub: +this.refs.pubSelector.value,
+			// Format to ISO 8601
+			date: datetime.format()
 		};
 	}
 	
@@ -49,6 +61,18 @@ class TripBuilder extends Component {
 					<label htmlFor="pubSelector" className="col-sm-2 control-label">Pub</label>
 					<div className="col-sm-10">
 						{renderedPubOptions}
+					</div>
+				</div>
+				<div className="form-group">
+					<label htmlFor="tripDate" className="col-sm-2 control-label">Date</label>
+					<div className="col-sm-10">
+						<input type="date" className="form-control" id="tripDate" ref="tripDate" placeholder="yyyy-mm-dd" />
+					</div>
+				</div>
+				<div className="form-group">
+					<label htmlFor="tripTime" className="col-sm-2 control-label">Time</label>
+					<div className="col-sm-10">
+						<input type="time" className="form-control" id="tripTime" ref="tripTime" placeholder="hh:mm" />
 					</div>
 				</div>
 				
