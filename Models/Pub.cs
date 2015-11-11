@@ -20,4 +20,17 @@ public class Trip
 	public ApplicationUser Organiser { get; set; }
 	[Required]
 	public Pub Pub { get; set; }
+	
+	public ICollection<Attendee> Attendees { get; set; }
+}
+
+public class Attendee
+{
+	public int Id { get; set; }
+	
+	[Required]
+	public Trip Trip { get; set; }
+	
+	[Required]
+	public ApplicationUser User { get; set; }
 }
