@@ -115,3 +115,31 @@ export function createTrip(trip) {
 		return dispatch(postTrip(trip));
 	}
 }
+
+export const TRIP_REQUEST = 'TRIP_REQUEST';
+export const TRIP_SUCCESS = 'TRIP_SUCCESS';
+export const TRIP_FAILURE = 'TRIP_FAILURE';
+
+function fetchTrip(tripId) {
+
+	return {
+		[CALL_API]: {
+			types: [TRIP_REQUEST, TRIP_SUCCESS, TRIP_FAILURE],
+			endpoint: `/api/trips/${tripId}`,
+			schema: Schemas.Trip
+		}
+	}
+
+}
+
+export function loadTrip(tripId) {
+	return (dispatch, getState) => {
+		const trip = getState().entities.trips[tripId];
+
+		if (trip) {
+			return null;
+		}
+
+		return dispatch(fetchTrip(tripId));
+	}
+}

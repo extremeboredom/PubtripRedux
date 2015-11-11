@@ -85,10 +85,35 @@ public class TripsController : Controller
                                          Organiser = new { 
                                              t.Organiser.UserName
                                          },
-										 PubId = t.Pub.Id
+										 Pub = new {
+                                             t.Pub.Id
+                                         }
 									 })
 									 .ToListAsync();
 
         return new HttpOkObjectResult(trips);
+    }
+    
+    [HttpGet]
+    [Route("api/trips/{tripId}")]
+    public async Task<IActionResult> GetTripAsync(int tripId, CancellationToken cancel)
+    {
+        var trip = await m_dbContext.Trips
+                                    .Where(t => t.Id == tripId)
+                                    .Select(t => new {
+                                        t.Id,
+                                        t.Name,
+                                        t.Date,
+                                        Organiser = new {
+                                            t.Organiser.UserName
+                                        },
+                                        Pub = new {
+                                            t.Pub.Id,
+                                            t.Pub.Name
+                                        }
+                                    })
+                                    .FirstOrDefaultAsync(cancel);
+        
+        return new HttpOkObjectResult(trip);
     }
 }
