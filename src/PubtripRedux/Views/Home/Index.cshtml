@@ -1,0 +1,13 @@
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Counter";
+}
+
+<div id="root"></div>
+
+<script type="text/javascript">
+    window.initialData = {
+        user: '@User.GetUserName()'
+    }
+</script>
