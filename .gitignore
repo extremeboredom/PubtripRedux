@@ -207,6 +207,7 @@ FakesAssemblies/
 
 # Build TypeScript
 wwwroot/js/bundle.js*
+wwwroot/lib/**/*
 
 # Pubtrip Sqlite database
 pubtrip_redux.db
