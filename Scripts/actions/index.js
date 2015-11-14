@@ -175,3 +175,30 @@ export function loadAttendeesForTrip(tripId, nextPage) {
 		return dispatch(fetchAttendeesForTrip(tripId, nextPageUrl));
 	}
 }
+
+export const CREATE_ATTENDEE_REQUEST = 'CREATE_ATTENDEE_REQUEST';
+export const CREATE_ATTENDEE_SUCCESS = 'CREATE_ATTENDEE_SUCCESS';
+export const CREATE_ATTENDEE_FAILURE = 'CREATE_ATTENDEE_FAILURE';
+
+function postAttendee(tripId) {
+	return {
+		[CALL_API]: {
+			types: [CREATE_ATTENDEE_REQUEST, CREATE_ATTENDEE_SUCCESS, CREATE_ATTENDEE_FAILURE],
+			endpoint: `/api/trips/${tripId}/attendees`,
+			schema: Schemas.Attendee,
+			options: {
+				method: 'post',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+			}
+		}
+	};
+}
+
+export function attendTrip(tripId) {
+	return (dispatch, getState) => {
+		return dispatch(postAttendee(tripId));
+	}
+}

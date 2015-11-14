@@ -1,13 +1,16 @@
 import { combineReducers } from 'redux';
 import { routerStateReducer } from 'redux-router';
 import merge from 'lodash/object/merge';
+import defaults from 'lodash/object/defaults';
 import counter from './counter';
 import user from './user';
 import * as ActionTypes from '../actions';
 import paginate from './paginate';
 
 // Updates an entity cache in response to any action with response.entities.
-function entities(state = { attendees: {}, pubs: {}, trips: {}, users: {} }, action) {
+function entities(state, action) {
+  state = defaults({}, state, { attendees: {}, pubs: {}, trips: {}, users: {}});
+  
   if (action.response && action.response.entities) {
     return merge({}, state, action.response.entities);
   }

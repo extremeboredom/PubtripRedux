@@ -2,12 +2,20 @@
 
 @{
     ViewData["Title"] = "Counter";
+    var userName = User.GetUserName();
 }
 
 <div id="root"></div>
 
 <script type="text/javascript">
     window.initialData = {
-        user: '@User.GetUserName()'
+        entities: {
+            users: {
+                '@userName' : {
+                    userName: '@userName'
+                }
+            }
+        },
+        user: '@userName'
     }
 </script>

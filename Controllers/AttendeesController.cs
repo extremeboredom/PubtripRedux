@@ -1,5 +1,6 @@
 
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Authorization;
@@ -20,7 +21,7 @@ namespace pubtrp_redux.Controllers
 		}
 		
 		[HttpGet]
-		[RouteAttribute("api/trips/{tripId}/attendees")]
+		[Route("api/trips/{tripId}/attendees")]
 		public async Task<IActionResult> GetAttendeesForTripAsync(int tripId, CancellationToken cancel)
 		{
 			var attendees = await m_dbContext.Attendees
@@ -33,6 +34,42 @@ namespace pubtrp_redux.Controllers
 											 .ToListAsync(cancel);
 											 
 			return new HttpOkObjectResult(attendees);
+		}
+		
+		[HttpPost]
+		[Route("api/trips/{tripId}/attendees")]
+		public async Task<IActionResult> StartAttendingAsync(int tripId, CancellationToken cancel)
+		{
+			var trip = await m_dbContext.Trips
+										.FirstOrDefaultAsync(t => t.Id == tripId, cancel);
+										
+			if (trip == null) {
+				return new BadRequestResult();
+			}
+			
+			var userId = User.GetUserId();
+        	var user = await m_dbContext.Users.FirstAsync(u => u.Id == userId);
+			
+			var attendee = new Attendee
+			{
+				User = user,
+				Trip = trip
+			};
+			
+			m_dbContext.Attendees.Add(attendee);
+			
+			await m_dbContext.SaveChangesAsync(cancel);
+			
+			var createdDto = new
+			{
+				attendee.Id,
+				Trip = attendee.Trip.Id,
+				User = attendee.User.UserName
+			};
+			
+			return new CreatedResult(
+				string.Format("/api/trips/{0}/attendees/{1}", tripId, attendee.Id), 
+				createdDto);
 		}
 	}
 }
