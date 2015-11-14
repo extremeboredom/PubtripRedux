@@ -40,12 +40,13 @@ public class TripsController : Controller
         }
         
         var userId = User.GetUserId();
+        var user = await m_dbContext.Users.FirstAsync(u => u.Id == userId);
         var trip = new Trip
         {
             Name = tripDto.Name,
             Pub = pub,
-            Organiser = m_dbContext.Users.First(u => u.Id == userId),
-            Date = tripDto.Date
+            Date = tripDto.Date,
+            Organiser = user
         };
 
         m_dbContext.Trips.Add(trip);
