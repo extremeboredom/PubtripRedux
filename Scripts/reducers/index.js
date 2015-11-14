@@ -7,7 +7,7 @@ import * as ActionTypes from '../actions';
 import paginate from './paginate';
 
 // Updates an entity cache in response to any action with response.entities.
-function entities(state = { pubs: {}, trips: {}, users: {} }, action) {
+function entities(state = { attendees: {}, pubs: {}, trips: {}, users: {} }, action) {
   if (action.response && action.response.entities) {
     return merge({}, state, action.response.entities);
   }
@@ -38,6 +38,14 @@ const pagination = combineReducers({
 			ActionTypes.PUBTRIPS_REQUEST,
 			ActionTypes.PUBTRIPS_SUCCESS,
 			ActionTypes.PUBTRIPS_FAILURE
+		]
+	}),
+	attendeesByTrip: paginate({
+		mapActionToKey: action => action.tripId,
+		types: [
+			ActionTypes.ATTENDEES_REQUEST,
+			ActionTypes.ATTENDEES_SUCCESS,
+			ActionTypes.ATTENDEES_FAILURE,
 		]
 	})
 })

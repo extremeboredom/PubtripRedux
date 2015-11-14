@@ -44,12 +44,18 @@ tripSchema.define({
 	organiser: userSchema
 });
 
+const attendeeSchema = new Schema('attendees', {
+	idAttribute: 'id'
+});
+
 export const Schemas = {
+	Attendee: attendeeSchema,
+	Attendees: arrayOf(attendeeSchema),
 	Pub: pubSchema,
 	Pubs: arrayOf(pubSchema),
 	Trip: tripSchema,
 	Trips: arrayOf(tripSchema),
-	User: userSchema
+	User: userSchema,
 };
 
 export const CALL_API = Symbol('Call API');

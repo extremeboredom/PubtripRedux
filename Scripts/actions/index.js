@@ -143,3 +143,35 @@ export function loadTrip(tripId) {
 		return dispatch(fetchTrip(tripId));
 	}
 }
+
+export const ATTENDEES_REQUEST = 'ATTENDEES_REQUEST';
+export const ATTENDEES_SUCCESS = 'ATTENDEES_SUCCESS';
+export const ATTENDEES_FAILURE = 'ATTENDEES_FAILURE';
+
+function fetchAttendeesForTrip(tripId, nextPageUrl) {
+
+	return {
+		tripId,
+		[CALL_API]: {
+			types: [ATTENDEES_REQUEST, ATTENDEES_SUCCESS, ATTENDEES_FAILURE],
+			endpoint: nextPageUrl,
+			schema: Schemas.Attendees
+		}
+	}
+
+}
+
+export function loadAttendeesForTrip(tripId, nextPage) {
+	return (dispatch, getState) => {
+		const {
+			nextPageUrl = `/api/trips/${tripId}/attendees`,
+			pageCount = 0
+		} = getState().pagination.attendeesByTrip[tripId] || {};
+
+		if (pageCount > 0 && !nextPage) {
+			return null;
+		}
+
+		return dispatch(fetchAttendeesForTrip(tripId, nextPageUrl));
+	}
+}
