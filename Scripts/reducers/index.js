@@ -1,7 +1,10 @@
 import { combineReducers } from 'redux';
 import { routerStateReducer } from 'redux-router';
+import assign from 'lodash/object/assign';
 import merge from 'lodash/object/merge';
 import defaults from 'lodash/object/defaults';
+import omit from 'lodash/object/omit';
+import without from 'lodash/array/without';
 import counter from './counter';
 import user from './user';
 import * as ActionTypes from '../actions';
@@ -14,6 +17,13 @@ function entities(state, action) {
   if (action.response && action.response.entities) {
     return merge({}, state, action.response.entities);
   }
+  
+  if (action.type === ActionTypes.REMOVE_ATTENDEE) {
+	  const attendees = omit(state.attendees, action.attendeeId);
+	  const updated = omit(state, 'attendees')
+	  updated.attendees = attendees;
+	  return updated;
+  }
 
   return state;
 }
@@ -24,6 +34,29 @@ function pages(state = { pubsPage: [] }, action) {
 	}
 	
 	return state;
+}
+
+const attendeesByTripPagination = paginate({
+		mapActionToKey: action => action.tripId,
+		types: [
+			ActionTypes.ATTENDEES_REQUEST,
+			ActionTypes.ATTENDEES_SUCCESS,
+			ActionTypes.ATTENDEES_FAILURE,
+		]
+	});
+	
+function attendeesByTrip(state, action) {
+	
+	state = attendeesByTripPagination(state, action);
+	
+	if (action.type === ActionTypes.REMOVE_ATTENDEE) {
+		const attendeesForTrip = without(state[action.tripId].ids, action.attendeeId);
+		const pagination = assign({}, state[action.tripId], {ids: attendeesForTrip});
+		return assign({}, state, { [action.tripId]: pagination});
+	}
+	
+	return state;
+	
 }
 
 const pagination = combineReducers({
@@ -43,14 +76,7 @@ const pagination = combineReducers({
 			ActionTypes.PUBTRIPS_FAILURE
 		]
 	}),
-	attendeesByTrip: paginate({
-		mapActionToKey: action => action.tripId,
-		types: [
-			ActionTypes.ATTENDEES_REQUEST,
-			ActionTypes.ATTENDEES_SUCCESS,
-			ActionTypes.ATTENDEES_FAILURE,
-		]
-	})
+	attendeesByTrip
 })
 
 let tripSavesInFlight = 0;

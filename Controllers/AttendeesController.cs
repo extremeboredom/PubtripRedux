@@ -71,5 +71,37 @@ namespace pubtrp_redux.Controllers
 				string.Format("/api/trips/{0}/attendees/{1}", tripId, attendee.Id), 
 				createdDto);
 		}
+		
+		[HttpDelete]
+		[Route("api/trips/{tripId}/attendees/{attendeeId}")]
+		public async Task<IActionResult> StopAttendingAsync(int tripId, int attendeeId, CancellationToken cancel)
+		{
+			var userId = User.GetUserId();
+			var attendee = await m_dbContext.Attendees
+											.Include(a => a.User)
+											.Include(a => a.Trip)
+											.FirstOrDefaultAsync(a => a.Id == attendeeId &&
+																	  a.Trip.Id == tripId &&
+																	  a.User.Id == userId,
+																 cancel);
+			
+			if (attendee == null)
+			{
+				return new BadRequestResult();
+			}
+			
+			if (attendee.User == attendee.Trip.Organiser) 
+			{
+				return new BadRequestResult();
+			}
+			
+			attendee.Trip.Attendees.Remove(attendee);
+			attendee.User.Attending.Remove(attendee);
+			m_dbContext.Attendees.Remove(attendee);
+			
+			await m_dbContext.SaveChangesAsync(cancel);
+			
+			return new NoContentResult();
+		}
 	}
 }

@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { loadTrip, loadAttendeesForTrip, attendTrip } from '../actions';
+import { loadTrip, loadAttendeesForTrip, attendTrip, removeAttendee } from '../actions';
 import Table from '../components/Table';
 import moment from 'moment-timezone';
-import some from 'lodash/collection/some';
+import find from 'lodash/collection/find';
 
 function loadData(props) {
 	const { tripId } = props;
@@ -51,15 +51,18 @@ class TripPage extends Component {
 			return null;
 		}
 		
-		const userIsAttending = some(attendees, a => a.user === user.userName);
+		const currentUserAttendee = find(attendees, a => a.user === user.userName);
 		
 		const startAttending = () => {
 			this.props.attendTrip(tripId).then(() => {
 				this.props.loadAttendeesForTrip(tripId, true)
 			});
-		}
-		return userIsAttending 
-			? (<h5>Currently Attending</h5>)
+		};
+		const stopAttending = () => {
+			this.props.removeAttendee(tripId, currentUserAttendee.id);
+		};
+		return currentUserAttendee 
+			? (<button onClick={stopAttending}>Stop Attending</button>)
 			: (<button onClick={startAttending}>Attend</button>); 
 	}
 
@@ -100,7 +103,8 @@ TripPage.propTypes = {
 	attendeesPagination: PropTypes.object.isRequired,
 	loadTrip: PropTypes.func.isRequired,
 	loadAttendeesForTrip: PropTypes.func.isRequired,
-	attendTrip: PropTypes.func.isRequired
+	attendTrip: PropTypes.func.isRequired,
+	removeAttendee: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {
@@ -125,5 +129,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps, { 
-	loadTrip, loadAttendeesForTrip, attendTrip 
+	loadTrip, loadAttendeesForTrip, attendTrip, removeAttendee
 })(TripPage);

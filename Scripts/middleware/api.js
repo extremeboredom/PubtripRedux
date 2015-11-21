@@ -27,6 +27,18 @@ function callApi(endpoint, schema, options) {
 			});
 }
 
+function deleteFromApi(endpoint, options) {
+	const fullUrl = (endpoint.indexOf(API_ROOT) === -1) ? API_ROOT + endpoint : endpoint;
+	
+	return fetch(fullUrl, options).then(response => {
+		if (!response.ok) {
+			return Promise.reject(response);
+		}
+		
+		return Promise.resolve();
+	});
+}
+
 const userSchema = new Schema('users', {
 	idAttribute: 'userName'
 });
@@ -101,6 +113,14 @@ export default store => next => action => {
 	const [requestType, successType, failureType] = types;
 	next(actionWith({ type: requestType }));
 
+	if (options.method === 'delete') {
+		return deleteFromApi(endpoint, options)
+			.then(
+				() => next(actionWith({type: successType})),
+				error => next(actionWith({type: failureType, error: error.message || 'Something bad happened'}))
+			);
+	}
+	
 	return callApi(endpoint, schema, options).then(
 		response => next(actionWith({
 			response,

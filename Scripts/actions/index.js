@@ -202,3 +202,45 @@ export function attendTrip(tripId) {
 		return dispatch(postAttendee(tripId));
 	}
 }
+
+export const REMOVE_ATTENDEE = 'REMOVE_ATTENDEE';
+
+function removeAttendeeFromCache(tripId, attendeeId) {
+	return {
+		type: REMOVE_ATTENDEE,
+		tripId,
+		attendeeId
+	}
+}
+
+export const DELETE_ATTENDEE_REQUEST = 'DELETE_ATTENDEE_REQUEST';
+export const DELETE_ATTENDEE_SUCCESS = 'DELETE_ATTENDEE_SUCCESS';
+export const DELETE_ATTENDEE_FAILURE = 'DELETE_ATTENDEE_FAILURE';
+
+function deleteAttendee(tripId, attendeeId) {
+	return {
+		[CALL_API]: {
+			types: [DELETE_ATTENDEE_REQUEST, DELETE_ATTENDEE_SUCCESS, DELETE_ATTENDEE_FAILURE],
+			endpoint: `/api/trips/${tripId}/attendees/${attendeeId}`,
+			schema: Schemas.Attendee,
+			options: {
+				method: 'delete',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+			}
+		}
+	};
+}
+
+export function removeAttendee(tripId, attendeeId) {
+	return (dispatch, getState) => {
+		return dispatch(deleteAttendee(tripId, attendeeId))
+			.then((action) => {
+				if (action.type === DELETE_ATTENDEE_SUCCESS) {
+					dispatch(removeAttendeeFromCache(tripId, attendeeId))
+				}
+			});
+	}
+}
