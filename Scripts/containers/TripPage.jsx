@@ -4,6 +4,7 @@ import { loadTrip, loadAttendeesForTrip, attendTrip, removeAttendee } from '../a
 import Table from '../components/Table';
 import moment from 'moment-timezone';
 import find from 'lodash/collection/find';
+import AttendButton from '../components/AttendButton';
 
 function loadData(props) {
 	const { tripId } = props;
@@ -15,6 +16,12 @@ function loadData(props) {
 const AttendeeColumn = 'AttendeeColumn';
 
 class TripPage extends Component {
+
+	constructor(props) {
+		super(props);
+		
+		this.startAttending = this.startAttending.bind(this);
+	}
 	
 	componentWillMount() {
 		loadData(this.props);
@@ -43,31 +50,15 @@ class TripPage extends Component {
 				return ''
 		}
 	}
-	
-	renderAttendButton() {
-		const { tripId, user, attendeesPagination, attendees } = this.props;
-		
-		if (attendeesPagination.isFetching) {
-			return null;
-		}
-		
-		const currentUserAttendee = find(attendees, a => a.user === user.userName);
-		
-		const startAttending = () => {
-			this.props.attendTrip(tripId).then(() => {
-				this.props.loadAttendeesForTrip(tripId, true)
-			});
-		};
-		const stopAttending = () => {
-			this.props.removeAttendee(tripId, currentUserAttendee.id);
-		};
-		return currentUserAttendee 
-			? (<button onClick={stopAttending}>Stop Attending</button>)
-			: (<button onClick={startAttending}>Attend</button>); 
+
+	startAttending(tripId) {
+		this.props.attendTrip(tripId).then(() => {
+			this.props.loadAttendeesForTrip(tripId, true)
+		});
 	}
 
 	render() {
-		const { trip, pub, attendeesPagination, attendees } = this.props;
+		const { trip, pub, attendeesPagination, attendees, user } = this.props;
 		
 		if (!trip || !pub) {
 			return (<h1><i>Loading Trip details...</i></h1>);
@@ -79,7 +70,11 @@ class TripPage extends Component {
 			<div>
 				<h1>{trip.name}</h1>
 				<h3>{`${date.calendar()} at ${pub.name}`}</h3>
-				{ this.renderAttendButton() }
+				<AttendButton user={user}
+							  trip={trip}
+							  attendees={attendees}
+							  startAttending={this.startAttending}
+							  stopAttending={this.props.removeAttendee}	/>
 				<Table isFetching={attendeesPagination.isFetching}
 						loadingLabel="Loading Attendees..."
 						items={attendees}

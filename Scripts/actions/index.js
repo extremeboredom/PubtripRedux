@@ -162,6 +162,7 @@ function fetchAttendeesForTrip(tripId, nextPageUrl) {
 }
 
 export function loadAttendeesForTrip(tripId, nextPage) {
+	tripId = tripId.toString();
 	return (dispatch, getState) => {
 		const {
 			nextPageUrl = `/api/trips/${tripId}/attendees`,
@@ -199,7 +200,7 @@ function postAttendee(tripId) {
 
 export function attendTrip(tripId) {
 	return (dispatch, getState) => {
-		return dispatch(postAttendee(tripId));
+		return dispatch(postAttendee(tripId.toString()));
 	}
 }
 
