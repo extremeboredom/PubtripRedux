@@ -46,7 +46,8 @@ public class TripsController : Controller
             Name = tripDto.Name,
             Pub = pub,
             Date = tripDto.Date,
-            Organiser = user
+            Organiser = user,
+            Attendees = new List<Attendee>{ new Attendee { User = user } }
         };
 
         m_dbContext.Trips.Add(trip);
