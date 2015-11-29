@@ -25,6 +25,10 @@ class AttendButton extends Component {
 	render() {
 		const { trip, user, attendees } = this.props;
 		
+		if (user.userName === trip.organiser) {
+			return null;
+		}
+		
 		const currentUserAttendee = find(attendees, a => a.user === user.userName);
 		
 		return currentUserAttendee
