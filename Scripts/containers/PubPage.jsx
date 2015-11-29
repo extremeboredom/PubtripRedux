@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { loadPub, loadTripsForPub } from '../actions';
 import Table from '../components/Table';
 import moment from 'moment-timezone';
@@ -41,7 +42,7 @@ class PubPage extends Component {
 	renderRow(item, column) {
 		switch(column) {
 			case TripNameColumn:
-				return item.name;
+				return <Link to={`/trips/${item.id}`}>{item.name}</Link>;
 			case WhenColumn:
 				return moment(item.date).calendar();
 			default:
