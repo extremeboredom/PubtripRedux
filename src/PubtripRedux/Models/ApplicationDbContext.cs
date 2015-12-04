@@ -11,6 +11,7 @@ namespace pubtrip_redux.Models
     {
         public DbSet<Pub> Pubs { get; set; }
         public DbSet<Trip> Trips { get; set; }
+        public DbSet<Attendee> Attendees { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {

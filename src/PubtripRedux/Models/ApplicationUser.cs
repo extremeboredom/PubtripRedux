@@ -10,5 +10,6 @@ namespace pubtrip_redux.Models
     public class ApplicationUser : IdentityUser
     {
         public ICollection<Trip> Trips { get; set; }
+        public ICollection<Attendee> Attending { get; set; }
     }
 }

@@ -40,12 +40,14 @@ public class TripsController : Controller
         }
         
         var userId = User.GetUserId();
+        var user = await m_dbContext.Users.FirstAsync(u => u.Id == userId);
         var trip = new Trip
         {
             Name = tripDto.Name,
             Pub = pub,
-            Organiser = m_dbContext.Users.First(u => u.Id == userId),
-            Date = tripDto.Date
+            Date = tripDto.Date,
+            Organiser = user,
+            Attendees = new List<Attendee>{ new Attendee { User = user } }
         };
 
         m_dbContext.Trips.Add(trip);
@@ -85,10 +87,35 @@ public class TripsController : Controller
                                          Organiser = new { 
                                              t.Organiser.UserName
                                          },
-										 PubId = t.Pub.Id
+										 Pub = new {
+                                             t.Pub.Id
+                                         }
 									 })
 									 .ToListAsync();
 
         return new HttpOkObjectResult(trips);
+    }
+    
+    [HttpGet]
+    [Route("api/trips/{tripId}")]
+    public async Task<IActionResult> GetTripAsync(int tripId, CancellationToken cancel)
+    {
+        var trip = await m_dbContext.Trips
+                                    .Where(t => t.Id == tripId)
+                                    .Select(t => new {
+                                        t.Id,
+                                        t.Name,
+                                        t.Date,
+                                        Organiser = new {
+                                            t.Organiser.UserName
+                                        },
+                                        Pub = new {
+                                            t.Pub.Id,
+                                            t.Pub.Name
+                                        }
+                                    })
+                                    .FirstOrDefaultAsync(cancel);
+        
+        return new HttpOkObjectResult(trip);
     }
 }
