@@ -11,7 +11,7 @@ module.exports = {
   resolveLoader: { root: __dirname + "/node_modules"},
   module: {
     loaders: [
-      { test: /\.jsx?$/, loader: 'babel-loader' }
+      { test: /\.jsx?$/, loader: 'babel-loader', query: { compact: false } }
     ]
   }
 }
