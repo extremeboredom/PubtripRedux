@@ -45,13 +45,15 @@
     "bower_components",
     "**.xproj",
     "**.user",
-    "**.vspscc"
+    "**.vspscc",
+    "scripts"
   ],
   "scripts": {
     "prepublish": [
       "npm install",
       "bower install",
       "gulp clean",
+      "gulp build",
       "gulp min"
     ]
   }
