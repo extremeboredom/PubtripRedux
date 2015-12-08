@@ -14,9 +14,12 @@ namespace pubtrip_redux
 {
     public class Startup
     {
+        private IHostingEnvironment CurrentEnvironment { get; set; }
+
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Setup configuration sources.
+            CurrentEnvironment = env;
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(appEnv.ApplicationBasePath)
@@ -31,7 +34,11 @@ namespace pubtrip_redux
             }
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
-            Configuration["Data:DefaultConnection:ConnectionString"] = $@"Data Source={appEnv.ApplicationBasePath}/pubtrip_redux.db";
+            if (env.IsDevelopment())
+            {
+                var dbName = Configuration["Data:DbName"];
+                Configuration["Data:DefaultConnection:ConnectionString"] = $@"Data Source={appEnv.ApplicationBasePath}/{dbName}";
+            }
         }
 
         public IConfigurationRoot Configuration { get; set; }
@@ -40,10 +47,20 @@ namespace pubtrip_redux
         public void ConfigureServices(IServiceCollection services)
         {
             // Add Entity Framework services to the services container.
-            services.AddEntityFramework()
-                .AddSqlite()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlite(Configuration["Data:DefaultConnection:ConnectionString"]));
+            var entityFramework = services.AddEntityFramework();
+            if (CurrentEnvironment.IsDevelopment())
+            {
+                entityFramework
+                    .AddSqlite()
+                    .AddDbContext<ApplicationDbContext>(options =>
+                                                        options.UseSqlite(Configuration["Data:DefaultConnection:ConnectionString"]));
+            } else
+            {
+                entityFramework
+                    .AddSqlServer()
+                    .AddDbContext<ApplicationDbContext>(options =>
+                                                        options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+            }
 
             // Add Identity services to the services container.
             services.AddIdentity<ApplicationUser, IdentityRole>()
