@@ -101,8 +101,11 @@ namespace pubtrip_redux
             loggerFactory.AddConsole();
             loggerFactory.AddDebug();
 
+            var context = app.ApplicationServices.GetService<ApplicationDbContext>();
+            context.Database.Migrate();
+
             // Configure the HTTP request pipeline.
-            
+
             // Add the platform handler to the request pipeline.
             app.UseIISPlatformHandler();
 
@@ -153,6 +156,7 @@ namespace pubtrip_redux
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
+
         }
     }
 }

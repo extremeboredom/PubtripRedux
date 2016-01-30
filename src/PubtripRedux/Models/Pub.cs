@@ -5,6 +5,7 @@ using pubtrip_redux.Models;
 
 public class Pub
 {
+    [Key]
 	public int Id { get; set; }
 	public string Name { get; set; }
 	public List<Trip> Trips { get; set; }
@@ -12,6 +13,7 @@ public class Pub
 
 public class Trip
 {
+    [Key]
 	public int Id { get; set; }
 	public string Name { get; set; }
 	public DateTimeOffset Date { get; set; }
@@ -26,6 +28,7 @@ public class Trip
 
 public class Attendee
 {
+    [Key]
 	public int Id { get; set; }
 	
 	[Required]
