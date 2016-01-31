@@ -8,13 +8,13 @@ using pubtrip_redux.Models;
 namespace PubtripRedux.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20151208163011_Initial")]
-    partial class Initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348");
+                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Attendee", b =>
                 {

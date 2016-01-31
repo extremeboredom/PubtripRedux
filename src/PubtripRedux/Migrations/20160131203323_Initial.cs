@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Data.Entity.Migrations;
+using Microsoft.Data.Entity.Metadata;
 
 namespace PubtripRedux.Migrations
 {
@@ -26,7 +27,7 @@ namespace PubtripRedux.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -62,7 +63,7 @@ namespace PubtripRedux.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     RoleId = table.Column<string>(nullable: false)
@@ -82,7 +83,7 @@ namespace PubtripRedux.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
@@ -144,7 +145,7 @@ namespace PubtripRedux.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Date = table.Column<DateTimeOffset>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     OrderCutoff = table.Column<DateTimeOffset>(nullable: true),
@@ -172,7 +173,7 @@ namespace PubtripRedux.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TripId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: false)
                 },

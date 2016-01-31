@@ -34,11 +34,6 @@ namespace pubtrip_redux
             }
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
-            if (env.IsDevelopment())
-            {
-                var dbName = Configuration["Data:DbName"];
-                Configuration["Data:DefaultConnection:ConnectionString"] = $@"Data Source={appEnv.ApplicationBasePath}/{dbName}";
-            }
         }
 
         public IConfigurationRoot Configuration { get; set; }
@@ -48,19 +43,10 @@ namespace pubtrip_redux
         {
             // Add Entity Framework services to the services container.
             var entityFramework = services.AddEntityFramework();
-            if (CurrentEnvironment.IsDevelopment())
-            {
-                entityFramework
-                    .AddSqlite()
-                    .AddDbContext<ApplicationDbContext>(options =>
-                                                        options.UseSqlite(Configuration["Data:DefaultConnection:ConnectionString"]));
-            } else
-            {
-                entityFramework
-                    .AddSqlServer()
-                    .AddDbContext<ApplicationDbContext>(options =>
-                                                        options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-            }
+            entityFramework
+                .AddSqlServer()
+                .AddDbContext<ApplicationDbContext>(options =>
+                                                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
             // Add Identity services to the services container.
             services.AddIdentity<ApplicationUser, IdentityRole>()
